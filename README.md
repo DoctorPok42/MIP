@@ -10,7 +10,7 @@ This repository provides a custom protocol for communication between micro-servi
 
 | Offset | Taille | Champ       | Description           |
 | -----: | -----: | ----------- | --------------------- |
-|      0 |      4 | magic       | `"MBUS"` (0x4D425553) |
+|      0 |      4 | magic       | `"MSIP"` (0x4D425553) |
 |      4 |      1 | version     | Version protocole (1) |
 |      5 |      1 | flags       | Bits de contrôle      |
 |      6 |      2 | frame_type  | Type de frame         |

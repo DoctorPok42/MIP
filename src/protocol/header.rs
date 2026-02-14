@@ -2,8 +2,8 @@ use std::convert::TryFrom;
 
 use bitflags::bitflags;
 
-pub const MBUS_MAGIC: [u8; 4] = *b"MBUS";
-pub const MBUS_VERSION: u8 = 1;
+pub const MSIP_MAGIC: [u8; 4] = *b"MSIP";
+pub const MSIP_VERSION: u8 = 1;
 pub const HEADER_SIZE: usize = 24;
 
 bitflags! {
@@ -68,8 +68,8 @@ impl Header {
         flags: FrameFlags,
     ) -> Self {
         Self {
-            magic: MBUS_MAGIC,
-            version: MBUS_VERSION,
+            magic: MSIP_MAGIC,
+            version: MSIP_VERSION,
             flags,
             frame_type,
             msg_kind,
@@ -100,7 +100,7 @@ impl TryFrom<[u8; HEADER_SIZE]> for Header {
     type Error = &'static str;
 
     fn try_from(buf: [u8; HEADER_SIZE]) -> Result<Self, Self::Error> {
-        if buf[0..4] != MBUS_MAGIC {
+        if buf[0..4] != MSIP_MAGIC {
             return Err("invalid magic");
         }
 
@@ -108,7 +108,7 @@ impl TryFrom<[u8; HEADER_SIZE]> for Header {
             .map_err(|_| "invalid frame type")?;
 
         Ok(Self {
-            magic: MBUS_MAGIC,
+            magic: MSIP_MAGIC,
             version: buf[4],
             flags: FrameFlags::from_bits_truncate(buf[5]),
             frame_type,
