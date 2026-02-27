@@ -43,6 +43,7 @@ This repository provides a custom protocol for communication between micro-servi
 | 0x0007 | ERROR       |
 | 0x0008 | PING        |
 | 0x0009 | PONG        |
+| 0x000A | CLOSE       |
 
 ...
 

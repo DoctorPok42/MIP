@@ -3,7 +3,7 @@ mod server;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    server::listener::start("0.0.0.0:9000").await?;
+    server::Listener::start("0.0.0.0:9000").await?;
     Ok(())
 }
 
