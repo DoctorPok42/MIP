@@ -62,6 +62,9 @@ impl Listener {
             let frame = match Frame::read_from(&mut reader).await {
                 Ok(f) => f,
                 Err(e) => {
+                    if e.kind() == std::io::ErrorKind::ConnectionReset {
+                        break;
+                    }
                     eprintln!("Erreur lecture client {}: {}", client_id, e);
                     break;
                 }

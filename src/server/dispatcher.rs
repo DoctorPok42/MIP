@@ -22,10 +22,7 @@ impl Dispatcher {
 
             FrameType::Unsubscribe => Self::handle_unsubscribe(broker, context, frame).await,
 
-            FrameType::Publish => {
-                Self::handle_publish(broker, frame).await;
-                None
-            }
+            FrameType::Publish => Self::handle_publish(broker, frame).await,
 
             FrameType::Close => None,
 
@@ -53,13 +50,13 @@ impl Dispatcher {
     ) -> Option<Frame> {
         let topic = String::from_utf8(frame.payload).ok()?;
 
+        if !frame.header.flags.contains(FrameFlags::ACK_REQUIRED) {
+            return None;
+        }
+
         {
             let mut broker = broker.lock().await;
             broker.subscribe(context.client_id, topic.clone());
-        }
-
-        if !frame.header.flags.contains(FrameFlags::ACK_REQUIRED) {
-            return None;
         }
 
         context.subscriptions.push(topic);
@@ -83,6 +80,10 @@ impl Dispatcher {
     ) -> Option<Frame> {
         let topic = String::from_utf8(frame.payload).ok()?;
 
+        if !frame.header.flags.contains(FrameFlags::ACK_REQUIRED) {
+            return None;
+        }
+
         {
             let mut broker = broker.lock().await;
             broker.unsubscribe(context.client_id, &topic);
@@ -102,20 +103,20 @@ impl Dispatcher {
         })
     }
 
-    async fn handle_publish(broker: SharedBroker, frame: Frame) {
+    async fn handle_publish(broker: SharedBroker, frame: Frame) -> Option<Frame> {
         if frame.payload.len() < 2 {
-            return;
+            return None;
         }
 
         let topic_len = u16::from_be_bytes([frame.payload[0], frame.payload[1]]) as usize;
 
         if frame.payload.len() < 2 + topic_len {
-            return;
+            return None;
         }
 
         let topic = match std::str::from_utf8(&frame.payload[2..2 + topic_len]) {
             Ok(t) => t,
-            Err(_) => return,
+            Err(_) => return None,
         };
 
         let outgoing = Frame {
@@ -125,5 +126,16 @@ impl Dispatcher {
 
         let broker = broker.lock().await;
         broker.publish(topic, outgoing);
+
+        Some(Frame {
+            header: Header::new(
+                FrameType::Ack,
+                MessageKind::State,
+                0,
+                frame.header.msg_id,
+                FrameFlags::empty(),
+            ),
+            payload: Vec::new(),
+        })
     }
 }

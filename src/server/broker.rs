@@ -48,11 +48,19 @@ impl Broker {
     }
 
     pub fn publish(&self, topic: &str, frame: Frame) {
-
         if let Some(subscribers) = self.topics.get(topic) {
             for client_id in subscribers {
                 if let Some(tx) = self.clients.get(client_id) {
-                    let _ = tx.send(frame.clone());
+                    let _ = tx.send(Frame {
+                        header: crate::protocol::Header::new(
+                            crate::protocol::FrameType::Event,
+                            crate::protocol::MessageKind::Event,
+                            frame.payload.len() as u32,
+                            frame.header.msg_id,
+                            crate::protocol::FrameFlags::COMPRESSED,
+                        ),
+                        payload: frame.payload.clone(),
+                    });
                 }
             }
         }
