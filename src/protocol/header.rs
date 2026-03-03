@@ -9,6 +9,7 @@ pub const HEADER_SIZE: usize = 24;
 bitflags! {
     #[derive(Debug, Clone, Copy)]
     pub struct FrameFlags: u8 {
+        const NONE         = 0b0000_0000;
         const ACK_REQUIRED = 0b0000_0001;
         const COMPRESSED   = 0b0000_0010;
         const URGENT       = 0b0000_0100;

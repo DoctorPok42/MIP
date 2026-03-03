@@ -2,6 +2,10 @@
 
 This repository provides a custom protocol for communication between micro-services and servers. It aims to facilitate seamless interaction and data exchange in a distributed system architecture.
 
+## Client-Server Communication
+
+The protocol defines a structured format for messages exchanged between clients and servers. Each message consists of a fixed-size header followed by a variable-length payload. The header contains essential metadata about the message, while the payload carries the actual data being transmitted.
+
 |     Header     |    Payload     |
 | -------------- | -------------- |
 |    24 bytes    |   N bytes      |
@@ -28,8 +32,6 @@ This repository provides a custom protocol for communication between micro-servi
 |   2 | URGENT       | Priorité élevée   |
 |   3 | RESERVED     | futur             |
 
-...
-
 ### Types de frame (2 bytes)
 
 | Valeur | Nom         |
@@ -45,8 +47,6 @@ This repository provides a custom protocol for communication between micro-servi
 | 0x0009 | PONG        |
 | 0x000A | CLOSE       |
 
-...
-
 ### msg_kind (2 bytes)
 
 | Valeur | Signification |
@@ -57,4 +57,17 @@ This repository provides a custom protocol for communication between micro-servi
 |      4 | LOG           |
 |      5 | METRIC        |
 
-...
+## Payload (N bytes)
+
+The payload contains the actual data being transmitted. Its structure depends on the frame type and message kind. For example, a PUBLISH frame with msg_kind = EVENT might contain a JSON object representing an event, while a SUBSCRIBE frame might contain a list of topics.
+
+## Client Library
+
+A client library is provided to facilitate the implementation of micro-services that communicate using this protocol. The library abstracts away the details of message formatting and parsing, allowing developers to focus on the application logic.
+
+[TypeScript Client Library](https://github.com/DoctorPok42/MIP-Clients/tree/main/mip-client-ts#readme)  
+[Python Client Library](https://github.com/DoctorPok42/MIP-Clients/tree/main/mip-client-python#readme)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
