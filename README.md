@@ -66,7 +66,8 @@ The payload contains the actual data being transmitted. Its structure depends on
 A client library is provided to facilitate the implementation of micro-services that communicate using this protocol. The library abstracts away the details of message formatting and parsing, allowing developers to focus on the application logic.
 
 [TypeScript Client Library](https://github.com/DoctorPok42/MIP-Clients/tree/main/mip-client-ts#readme)  
-[Python Client Library](https://github.com/DoctorPok42/MIP-Clients/tree/main/mip-client-python#readme)
+[Python Client Library](https://github.com/DoctorPok42/MIP-Clients/tree/main/mip-client-python#readme)  
+[Rust Client Library](https://github.com/DoctorPok42/MIP-Clients/tree/main/mip-client-rust#readme)
 
 ## License
 
