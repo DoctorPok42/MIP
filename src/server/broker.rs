@@ -8,9 +8,14 @@ use crate::server::frame::Frame;
 
 pub type SharedBroker = Arc<Mutex<Broker>>;
 
+pub struct Session {
+    pub topics: Vec<String>,
+}
+
 pub struct Broker {
     pub clients: HashMap<u64, UnboundedSender<Frame>>,
     pub topics: HashMap<String, HashSet<u64>>,
+    pub sessions: HashMap<u64, Session>,
 }
 
 impl Broker {
@@ -18,6 +23,7 @@ impl Broker {
         Self {
             clients: HashMap::new(),
             topics: HashMap::new(),
+            sessions: HashMap::new(),
         }
     }
 
@@ -31,14 +37,11 @@ impl Broker {
 
     pub fn unregister_client(&mut self, client_id: u64) {
         self.clients.remove(&client_id);
-
-        for subscribers in self.topics.values_mut() {
-            subscribers.remove(&client_id);
-        }
     }
 
     pub fn subscribe(&mut self, client_id: u64, topic: String) {
-        self.topics.entry(topic).or_default().insert(client_id);
+        let subscribers = self.topics.entry(topic.clone()).or_default();
+        subscribers.insert(client_id);
     }
 
     pub fn unsubscribe(&mut self, client_id: u64, topic: &str) {

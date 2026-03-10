@@ -4,3 +4,4 @@ pub mod frame;
 pub mod listener;
 
 pub use listener::Listener;
+pub use broker::Session;

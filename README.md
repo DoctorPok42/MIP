@@ -2,6 +2,15 @@
 
 This repository provides a custom protocol for communication between micro-services and servers. It aims to facilitate seamless interaction and data exchange in a distributed system architecture.
 
+## Features
+
+- 🚀 **High Performance**: Designed for low latency and high throughput communication
+- 📊 **Structured Messaging**: Clear message format with a fixed-size header and variable-length payload
+- 🔄 **Session Resumption**: Automatically resume sessions after disconnections
+- 📡 **Robust Communication**: Reliable message delivery with ACK and ERROR handling
+- 🧩 **Extensible**: Easily extendable protocol to accommodate future features
+- 📚 **Client Libraries**: Available client libraries in TypeScript, Python, and Rust for easy integration
+
 ## Client-Server Communication
 
 The protocol defines a structured format for messages exchanged between clients and servers. Each message consists of a fixed-size header followed by a variable-length payload. The header contains essential metadata about the message, while the payload carries the actual data being transmitted.
