@@ -1,0 +1,7 @@
+services:
+  mip:
+    build: .
+    restart: unless-stopped
+    container_name: mip
+    ports:
+      - "8090:9000"
