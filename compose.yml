@@ -1,6 +1,6 @@
 services:
   mip:
-    build: .
+    image: doctorpok/whatsup:mip
     restart: unless-stopped
     container_name: mip
     ports:
