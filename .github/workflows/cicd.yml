@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  Build and Push Docker Image:
+  Build_and_Push_Docker_Image:
     runs-on: self-hosted
     steps:
       -
@@ -34,8 +34,8 @@ jobs:
           tags: ${{ vars.DOCKERHUB_USERNAME }}/whatsup:mip
           platforms: linux/amd64,linux/arm64
 
-  Deploy to Server:
-    needs: Build and Push Docker Image
+  Deploy_to_Server:
+    needs: Build_and_Push_Docker_Image
     runs-on: self-hosted
     steps:
       -
