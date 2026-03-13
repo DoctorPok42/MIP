@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  Build_and_Push_Docker_Image:
+  build_and_push:
     runs-on: self-hosted
     steps:
       -
@@ -31,11 +31,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/whatsup:mip
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/mip:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
 
-  Deploy_to_Server:
-    needs: Build_and_Push_Docker_Image
+  deploy:
+    needs: build_and_push
     runs-on: self-hosted
     steps:
       -
@@ -48,5 +48,22 @@ jobs:
           script: |
             cd ${{ secrets.SERVER_APP_DIR }}
             sudo curl -Lf "https://raw.githubusercontent.com/DoctorPok42/MIP/main/compose.yml" -o compose.yml
-            docker pull ${{ vars.DOCKERHUB_USERNAME }}/whatsup:mip
+            docker pull ${{ vars.DOCKERHUB_USERNAME }}/mip:${{ github.sha }}
             docker compose -f compose.yml up -d --force-recreate
+
+  update_latest:
+    needs: build_and_push
+    runs-on: self-hosted
+    steps:
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Update latest tag
+        run: |
+          docker pull ${{ vars.DOCKERHUB_USERNAME }}/mip:${{ github.sha }}
+          docker tag ${{ vars.DOCKERHUB_USERNAME }}/mip:${{ github.sha }} ${{ vars.DOCKERHUB_USERNAME }}/mip:latest
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/mip:latest
