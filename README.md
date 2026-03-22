@@ -1,4 +1,7 @@
-# Micro-Service Interface Protocol
+# Micro-Service Interface Protocol (MIP)
+
+![Status](https://uptime.doctorpok.io/api/badge/14/status)
+![Uptime](https://uptime.doctorpok.io/api/badge/14/uptime)
 
 This repository provides a custom protocol for communication between micro-services and servers. It aims to facilitate seamless interaction and data exchange in a distributed system architecture.
 
